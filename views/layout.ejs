@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Portfolio' %></title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+</head>
+<body>
+  <header class="main-header d-flex align-items-center justify-content-between px-4 py-2 shadow-sm bg-dark bg-opacity-75">
+    <div class="d-flex align-items-center gap-3">
+      <div class="header-slogan d-flex align-items-center mt-1">
+        <span>
+          <% if (langCode === 'vi') { %>
+            Đơn giản hóa công nghệ, tạo giá trị thực tiễn
+          <% } else { %>
+            Engineering Simplicity, Delivering Impact
+          <% } %>
+        </span>
+        <img id="cat-slogan-img" class="cat-slogan ms-2" width="32" height="24" style="image-rendering:pixelated;" alt="cat">
+      </div>
+    </div>
+    <nav class="d-flex align-items-center gap-3">
+      <a class="nav-link-header <%= activePage === 'home' ? 'active' : '' %>" href="/">Home</a>
+      <a class="nav-link-header <%= activePage === 'about' ? 'active' : '' %>" href="/about">About</a>
+      <a class="nav-link-header <%= activePage === 'skills' ? 'active' : '' %>" href="/skills">Skills</a>
+      <a class="nav-link-header <%= activePage === 'projects' ? 'active' : '' %>" href="/projects">Projects</a>
+      <a class="nav-link-header <%= activePage === 'contact' ? 'active' : '' %>" href="/contact">Contact</a>
+      <div class="lang-switcher bg-white bg-opacity-75 rounded-pill shadow-sm px-2 py-1 d-flex align-items-center ms-3" style="min-width:70px;">
+        <a href="?lang=vi" class="btn btn-link btn-sm px-2 py-0 fw-bold <%= langCode==='vi' ? 'text-primary' : 'text-secondary' %>" style="text-decoration:none;">VI</a>
+        <span class="text-muted">|</span>
+        <a href="?lang=en" class="btn btn-link btn-sm px-2 py-0 fw-bold <%= langCode==='en' ? 'text-primary' : 'text-secondary' %>" style="text-decoration:none;">EN</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <div id="particles-js"></div>
+    <div class="main-content-inner">
+      <%- body %>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="/js/scroll-navigate.js"></script>
+  <script>
+    AOS.init();
+    particlesJS.load('particles-js', '/js/particles.json', function() {
+      // particles.js loaded
+    });
+    
+    // Random cat gif
+    const catGifs = [
+      '/images/kitanya-vtuber.gif',
+      '/images/nian-cat.gif',
+      '/images/nyan-cat-poptart-cat.gif',
+      '/images/pixel-cat-wave.gif'
+    ];
+    const catImg = document.getElementById('cat-slogan-img');
+    if (catImg) {
+      const idx = Math.floor(Math.random() * catGifs.length);
+      catImg.src = catGifs[idx];
+    }
+  </script>
+</body>
+</html> 

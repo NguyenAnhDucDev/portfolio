@@ -1,0 +1,126 @@
+<% const hardSkillGroups = [
+  'Programming Languages',
+  'Backend & API Development',
+  'Database & Data Management',
+  'DevOps & Tools',
+  'Web Frontend & UI',
+  'Business Analysis'
+]; %>
+<% const softSkillGroups = [
+  'Project Management & Collaboration',
+  'Soft Skills'
+]; %>
+<h2 class="fw-bold mb-4 text-white text-center"><%= langCode === 'vi' ? 'Kỹ năng' : 'Skills' %></h2>
+<div class="skills-chips-layout mx-auto">
+  <% hardSkillGroups.forEach(function(group) { %>
+    <div class="skills-chip-group mb-4">
+      <div class="skill-group-title mb-2" style="font-weight:700; font-size:1.08em; color:#00eaff;">
+        <i class="<%=
+          group === 'Programming Languages' ? 'fas fa-code' :
+          group === 'Backend & API Development' ? 'fas fa-server' :
+          group === 'Database & Data Management' ? 'fas fa-database' :
+          group === 'DevOps & Tools' ? 'fas fa-cogs' :
+          group === 'Web Frontend & UI' ? 'fas fa-desktop' :
+          group === 'Business Analysis' ? 'fas fa-briefcase' : ''
+        %> me-2"></i>
+        <%= langCode === 'vi' && group === 'Programming Languages' ? 'Ngôn ngữ lập trình' :
+            langCode === 'vi' && group === 'Backend & API Development' ? 'Backend & API' :
+            langCode === 'vi' && group === 'Database & Data Management' ? 'Cơ sở dữ liệu' :
+            langCode === 'vi' && group === 'DevOps & Tools' ? 'DevOps & Công cụ' :
+            langCode === 'vi' && group === 'Web Frontend & UI' ? 'Web Frontend & UI' :
+            langCode === 'vi' && group === 'Business Analysis' ? 'Phân tích nghiệp vụ' : group %>
+      </div>
+      <div class="skills-chips-row">
+        <% (profile.skills[group] || []).forEach(function(skill) { %>
+          <span class="skill-chip hard-skill-chip mb-2 me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= skill.description[langCode] %>">
+            <%= skill.name[langCode] %>
+          </span>
+        <% }); %>
+      </div>
+    </div>
+  <% }); %>
+  <% softSkillGroups.forEach(function(group) { %>
+    <div class="skills-chip-group mb-4">
+      <div class="skill-group-title mb-2" style="font-weight:700; font-size:1.08em; color:#e53935;">
+        <i class="<%=
+          group === 'Project Management & Collaboration' ? 'fas fa-users' :
+          group === 'Soft Skills' ? 'fas fa-lightbulb' : ''
+        %> me-2"></i>
+        <%= langCode === 'vi' && group === 'Project Management & Collaboration' ? 'Quản lý dự án & Hợp tác' :
+            langCode === 'vi' && group === 'Soft Skills' ? 'Kỹ năng mềm khác' : group %>
+      </div>
+      <div class="skills-chips-row">
+        <% (profile.skills[group] || []).forEach(function(skill) { %>
+          <span class="skill-chip soft-skill-chip mb-2 me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= skill.description[langCode] %>">
+            <%= skill.name[langCode] %>
+          </span>
+        <% }); %>
+      </div>
+    </div>
+  <% }); %>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+});
+</script>
+<style>
+.skills-chips-layout {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 8px;
+}
+.skills-chip-group {
+  background: rgba(16,19,26,0.85);
+  border-radius: 16px;
+  box-shadow: 0 4px 32px 0 rgba(0,234,255,0.08);
+  border: 1.5px solid rgba(0,234,255,0.08);
+  padding: 18px 20px 10px 20px;
+}
+.skills-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+.skill-chip {
+  display: inline-block;
+  padding: 0.45em 1.1em;
+  border-radius: 999px;
+  font-size: 1em;
+  font-weight: 600;
+  background: rgba(0,234,255,0.13);
+  color: #00eaff;
+  border: 1.2px solid #00eaff;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px 0 rgba(0,234,255,0.08);
+}
+.skill-chip.hard-skill-chip {
+  background: rgba(0,234,255,0.13);
+  color: #00eaff;
+  border-color: #00eaff;
+}
+.skill-chip.soft-skill-chip {
+  background: rgba(229,57,53,0.13);
+  color: #e53935;
+  border-color: #e53935;
+}
+.skill-chip:hover, .skill-chip:focus {
+  background: #00eaff;
+  color: #10131a;
+  box-shadow: 0 4px 16px 0 rgba(0,234,255,0.18);
+}
+.skill-chip.soft-skill-chip:hover, .skill-chip.soft-skill-chip:focus {
+  background: #e53935;
+  color: #fff;
+  box-shadow: 0 4px 16px 0 rgba(229,57,53,0.18);
+}
+@media (max-width: 767px) {
+  .skills-chips-layout { max-width: 100%; }
+  .skills-chip-group { padding: 14px 8px 8px 8px; }
+  .skill-chip { font-size: 0.98em; padding: 0.38em 0.9em; }
+}
+</style> 

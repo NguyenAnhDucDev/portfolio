@@ -1,0 +1,28 @@
+<div class="contact-container">
+  <h1 class="contact-title"><%= lang.contactTitle || 'Contact' %></h1>
+  <% if (langCode === 'vi') { %>
+    <p class="contact-note text-info mb-3" style="font-size:1.08em;">Bạn là nhà tuyển dụng hoặc muốn hợp tác? Hãy liên hệ với tôi về vị trí Business Analyst hoặc Backend/Software Engineer!</p>
+  <% } else { %>
+    <p class="contact-note text-info mb-3" style="font-size:1.08em;">Are you a recruiter or want to collaborate? Contact me for Business Analyst or Backend/Software Engineer positions!</p>
+  <% } %>
+  <form id="contactForm" class="contact-form" autocomplete="off">
+    <div class="input-group">
+      <span class="input-icon"><i class="fas fa-user"></i></span>
+      <input type="text" name="name" placeholder="<%= lang.yourName || 'Your Name' %>" required>
+    </div>
+    <div class="input-group">
+      <span class="input-icon"><i class="fas fa-envelope"></i></span>
+      <input type="email" name="email" placeholder="<%= lang.yourEmail || 'Your Email' %>" required>
+    </div>
+    <div class="input-group textarea-group">
+      <span class="input-icon"><i class="fas fa-comment-dots"></i></span>
+      <textarea name="message" placeholder="<%= lang.yourMessage || 'Your Message' %>" required></textarea>
+    </div>
+    <button type="submit" id="sendBtn" class="send-btn"><%= lang.send || 'Send' %></button>
+    <div id="formStatus" class="form-status"></div>
+  </form>
+  <div class="contact-socials">
+    <a href="https://github.com/<%= profile.contact.github %>" target="_blank" class="social-icon" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="<%= profile.contact.facebook %>" target="_blank" class="social-icon" title="Facebook"><i class="fab fa-facebook"></i></a>
+  </div>
+</div> 

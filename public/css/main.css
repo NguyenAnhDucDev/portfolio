@@ -1,0 +1,19 @@
+/* Fade out animation for page transitions */
+.main-content-inner {
+    transition: opacity 0.4s ease-out;
+}
+
+.main-content-inner.fade-out {
+    opacity: 0;
+}
+
+/* Ensure smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Prevent content jump during fade */
+.main-content {
+    min-height: 100vh;
+    position: relative;
+} 

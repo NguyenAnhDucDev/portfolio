@@ -1,0 +1,109 @@
+<div class="row g-4">
+  <!-- Left: Profile in card + About Me -->
+  <div class="col-md-4 d-flex flex-column align-items-center align-items-md-start">
+    <div class="profile-card glass-card w-100 mb-4 p-4 d-flex flex-column align-items-center align-items-md-start">
+      <img src="/images/avatar.jpg" class="profile-avatar mb-2 shadow" width="120" height="120" alt="Ảnh đại diện Nguyễn Anh Đức">
+      <h2 class="fw-bold mb-1 pt-2">Nguyễn Anh Đức</h2>
+      <div class="profile-info mb-2">
+        <i class="fas fa-map-marker-alt"></i> Nam Định, Việt Nam
+      </div>
+      <div class="profile-info mb-2">
+        <i class="fas fa-birthday-cake"></i> 03/01/2004
+      </div>
+      <div class="profile-info mb-2">
+        <i class="fas fa-envelope"></i> <a href="mailto:22024536@vnu.edu.vn">22024536@vnu.edu.vn</a>
+      </div>
+      <div class="profile-info mb-2">
+        <i class="fab fa-github"></i> <a href="https://github.com/NguyenAnhDucDev" target="_blank">NguyenAnhDucDev</a>
+      </div>
+    </div>
+    <!-- About me in card (moved here) -->
+    <div class="glass-card mb-4 p-4 w-100">
+      <h3 class="fw-bold mb-2"><%= langCode === 'vi' ? 'Giới thiệu' : 'About Me' %></h3>
+      <div class="about-summary text-secondary">
+        <% if (langCode === 'vi') { %>
+          <p>
+            Sinh viên năm 3 ngành Hệ thống thông tin tại Trường Đại học Công nghệ - ĐHQGHN, đam mê phát triển backend và DevOps. Luôn chủ động học hỏi, sáng tạo và mong muốn đóng góp, phát triển trong môi trường chuyên nghiệp.
+          </p>
+          <p>
+            Bên cạnh kỹ năng kỹ thuật, tôi còn quan tâm đến lĩnh vực Phân tích nghiệp vụ (BA). Tôi yêu thích việc kết nối giữa nhu cầu kinh doanh và giải pháp công nghệ, có kinh nghiệm phân tích yêu cầu, mô hình hóa quy trình và giao tiếp hiệu quả với các bên liên quan.
+          </p>
+        <% } else { %>
+          <p>
+            I am a third-year Information Systems student at VNU-UET, passionate about backend development and DevOps. Always eager to learn, contribute, and grow in a professional environment.
+          </p>
+          <p>
+            Besides my technical skills, I am also interested in Business Analysis. I enjoy bridging the gap between business needs and technology solutions, and have experience in requirement analysis, process modeling, and effective communication with stakeholders.
+          </p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <!-- Right: Main content (Education + Career Focus) -->
+  <div class="col-md-8">
+    <!-- Education in card -->
+    <div class="glass-card mb-4 p-4">
+      <h3 class="fw-bold mb-2"><%= langCode === 'vi' ? 'Học vấn' : 'Education' %></h3>
+      <% profile.education.forEach(function(edu) { %>
+        <% if (edu.major) { %>
+          <div class="edu-uni<% if (edu.school[langCode].toLowerCase().includes('ngoại thương') || edu.school[langCode].toLowerCase().includes('foreign trade')) { %> ftu<% } %> mb-3 p-3 rounded shadow-sm">
+            <div class="d-flex align-items-center justify-content-between mb-1 flex-wrap">
+              <div class="d-flex align-items-center">
+                <% if (edu.school[langCode].toLowerCase().includes('ngoại thương') || edu.school[langCode].toLowerCase().includes('foreign trade')) { %>
+                  <img src="/images/FTU.jpg" alt="FTU Logo" class="school-logo me-2" width="36" height="36" style="object-fit:cover;">
+                  <a href="https://ftu.edu.vn" target="_blank" class="school-name fw-bold fs-5" style="text-decoration:none; color:inherit;">
+                    <%= edu.school[langCode] %>
+                  </a>
+                <% } else if (edu.school[langCode].toLowerCase().includes('công nghệ') || edu.school[langCode].toLowerCase().includes('engineering and technology')) { %>
+                  <img src="/images/UET.jpg" alt="UET Logo" class="school-logo me-2" width="36" height="36" style="object-fit:cover;">
+                  <a href="https://uet.vnu.edu.vn" target="_blank" class="school-name fw-bold fs-5" style="text-decoration:none; color:inherit;">
+                    <%= edu.school[langCode] %>
+                  </a>
+                <% } else { %>
+                  <span class="school-name fw-bold fs-5"><%= edu.school[langCode] %></span>
+                <% } %>
+              </div>
+              <span class="school-time text-muted ms-2"><%= edu.time %></span>
+            </div>
+            <div class="d-flex align-items-center mb-2 flex-wrap">
+              <span class="edu-major fw-semibold me-3">
+                <i class="fas fa-graduation-cap text-info"></i> <%= edu.major[langCode] %>
+              </span>
+              <% if (edu.gpa) { %>
+                <span class="badge-gpa ms-2">GPA: <%= edu.gpa %></span>
+              <% } %>
+              <% if (edu.studentId) { %>
+                <span class="badge-id ms-2">ID: <%= edu.studentId %></span>
+              <% } %>
+            </div>
+            <% if (edu.description) { %>
+              <div class="edu-desc text-secondary" style="font-size:1em;">
+                <%= edu.description[langCode] %>
+              </div>
+            <% } %>
+          </div>
+        <% } %>
+      <% }); %>
+    </div>
+    <!-- Career Focused Intro in card -->
+    <div class="glass-card mb-4 p-4">
+      <% if (langCode === 'vi') { %>
+        <p class="fw-bold text-info mb-1" style="font-size:1.13em;">
+          Định hướng phát triển sự nghiệp ở hai lĩnh vực: <b>Business Analyst (BA)</b> và <b>Backend/Software Engineer</b>.
+        </p>
+        <p class="mb-2" style="color:#bfc9d1; font-size:1.08em;">
+          Tôi yêu thích việc kết nối giữa nhu cầu kinh doanh và giải pháp công nghệ, đồng thời đam mê xây dựng hệ thống backend tối ưu, bảo mật, hiện đại.<br>
+          <span style="color:#fff;">Sẵn sàng học hỏi, chủ động, thích giải quyết các bài toán thực tế trong doanh nghiệp.</span> Đang tìm kiếm vị trí thực tập <b>Business Analyst</b> hoặc <b>Backend/Software Engineer</b> để áp dụng kiến thức và tích lũy kinh nghiệm thực tế.
+        </p>
+      <% } else { %>
+        <p class="fw-bold text-info mb-1" style="font-size:1.13em;">
+          Career focus: <b>Business Analyst (BA)</b> and <b>Backend/Software Engineer</b>.
+        </p>
+        <p class="mb-2" style="color:#bfc9d1; font-size:1.08em;">
+          I enjoy bridging business needs and technology solutions, and am passionate about building secure, modern, and optimized backend systems.<br>
+          <span style="color:#fff;">Proactive, eager to learn, and love solving real-world business problems.</span> Seeking an internship as a <b>Business Analyst</b> or <b>Backend/Software Engineer</b> to apply my skills and gain hands-on experience.
+        </p>
+      <% } %>
+    </div>
+  </div>
+</div> 

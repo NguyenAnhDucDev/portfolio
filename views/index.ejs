@@ -1,0 +1,52 @@
+<section class="home-hero d-flex align-items-center justify-content-center position-relative" style="min-height: 80vh;">
+  <div class="container position-relative z-2">
+    <div class="row align-items-center justify-content-center">
+      <div class="col-lg-7 text-center text-lg-start">
+        <h1 class="display-2 fw-bold mb-3">
+          <% if(langCode === 'vi') { %>
+            Xin chào, tôi là <span class="highlight">Đức</span>,<br> Backend/BA.
+          <% } else { %>
+            Hi, I'm <span class="highlight">Duc</span>,<br> Backend/BA.
+          <% } %>
+        </h1>
+        <p class="lead mb-4">
+          <% if(langCode === 'vi') { %>
+            Lập trình viên Backend / Phân tích nghiệp vụ
+          <% } else { %>
+            Backend Developer / Business Analyst
+          <% } %>
+        </p>
+        <!-- Career Goals Section -->
+        <div class="mb-4">
+          <% if(langCode === 'vi') { %>
+            <div class="fw-bold text-info mb-1">Mục tiêu nghề nghiệp</div>
+            <ul class="ps-3" style="font-size:1.08em;">
+              <li><b>Business Analyst (BA):</b> Cầu nối giữa khách hàng và đội ngũ kỹ thuật, giúp dự án thành công.</li>
+              <li><b>Backend/Software Engineer:</b> Xây dựng hệ thống backend mạnh mẽ, tối ưu, bảo mật.</li>
+              <li>Kỹ sư trí tuệ nhân tạo, Data Scientist, DevOps Engineer.</li>
+            </ul>
+            <div class="text-secondary" style="font-size:0.98em;">Đang tìm kiếm vị trí thực tập BA hoặc Backend Engineer để phát triển sự nghiệp.</div>
+          <% } else { %>
+            <div class="fw-bold text-info mb-1">Career Goals</div>
+            <ul class="ps-3" style="font-size:1.08em;">
+              <li><b>Business Analyst (BA):</b> Bridge between clients and tech teams, ensuring project success.</li>
+              <li><b>Backend/Software Engineer:</b> Build robust, optimized, and secure backend systems.</li>
+              <li>AI Engineer, Data Scientist, DevOps Engineer.</li>
+            </ul>
+            <div class="text-secondary" style="font-size:0.98em;">Seeking an internship as a BA or Backend Engineer to grow my career.</div>
+          <% } %>
+        </div>
+        <a href="/contact?lang=<%= langCode %>" class="btn btn-outline-info btn-lg px-5 py-2 fw-semibold">
+          <% if(langCode === 'vi') { %>Liên hệ với tôi<% } else { %>Contact Me<% } %>
+        </a>
+      </div>
+      <div class="col-lg-5 d-none d-lg-flex justify-content-center align-items-center">
+        <div class="big-logo">
+          <!-- Không để mèo trong logo nữa -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- particles.js sẽ nằm phía sau -->
+</section>
+<script src="/js/darkmode.js"></script> 
