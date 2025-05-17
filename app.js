@@ -11,6 +11,7 @@ const multer = require('multer');
 const sgMail = require('@sendgrid/mail');
 const fs = require('fs');
 const { sendEmail } = require('./config/sendgrid');
+const contactRouter = require('./routes/contact');
 
 console.log('SENDGRID_API_KEY:', process.env.SENDGRID_API_KEY);
 
@@ -425,6 +426,8 @@ app.post('/api/contact', upload.single('jdFile'), async (req, res) => {
     res.status(500).json({ success: false, message: 'Gửi email thất bại!', error: error.message });
   }
 });
+
+app.use('/', contactRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

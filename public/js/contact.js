@@ -8,31 +8,33 @@ document.getElementById('contactForm').onsubmit = async function(e) {
     btn.style.background = 'linear-gradient(90deg, #00eaff 0%, #00fff7 100%)';
     status.textContent = 'Đang gửi...';
     status.classList.add('active');
+
     const formData = new FormData(this);
-    formData.append('phone', this.phone.value);
-    const data = new URLSearchParams({
-        'entry.1389696762': formData.get('name'),
-        'entry.431852918': formData.get('email'),
-        'entry.747627106': formData.get('message')
-    });
+    
     try {
-        await fetch('https://docs.google.com/forms/d/e/1FAIpQLSeQo7iA3w1ZgJ8OUj22GVMmRt37PB8pMqleot0kxUIN3z-QUg/formResponse', {
+        const response = await fetch('/api/contact', {
             method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: data.toString()
+            body: formData
         });
-        status.textContent = 'Gửi thành công! Tôi sẽ liên hệ lại sớm.';
-        status.style.color = '#00fff7';
-        btn.textContent = 'Đã gửi ✓';
-        btn.style.background = 'linear-gradient(90deg, #00fff7 0%, #00eaff 100%)';
-        this.reset();
-    } catch {
-        status.textContent = 'Có lỗi xảy ra. Vui lòng thử lại!';
+
+        const result = await response.json();
+
+        if (result.success) {
+            status.textContent = 'Gửi thành công! Tôi sẽ liên hệ lại sớm.';
+            status.style.color = '#00fff7';
+            btn.textContent = 'Đã gửi ✓';
+            btn.style.background = 'linear-gradient(90deg, #00fff7 0%, #00eaff 100%)';
+            this.reset();
+        } else {
+            throw new Error(result.message || 'Có lỗi xảy ra');
+        }
+    } catch (error) {
+        status.textContent = error.message || 'Có lỗi xảy ra. Vui lòng thử lại!';
         status.style.color = '#ff4b4b';
         btn.textContent = 'Thử lại';
         btn.style.background = 'linear-gradient(90deg, #ff4b4b 0%, #ff5252 100%)';
     }
+
     setTimeout(() => {
         status.classList.remove('active');
         btn.disabled = false;
