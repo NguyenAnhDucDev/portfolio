@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -6,7 +7,12 @@ const langData = require('./lang');
 const cookieParser = require('cookie-parser');
 const PDFDocument = require('pdfkit');
 const expressLayouts = require('express-ejs-layouts');
-const nodemailer = require('nodemailer');
+const multer = require('multer');
+const sgMail = require('@sendgrid/mail');
+const fs = require('fs');
+const { sendEmail } = require('./config/sendgrid');
+
+console.log('SENDGRID_API_KEY:', process.env.SENDGRID_API_KEY);
 
 // Set view engine
 app.set('view engine', 'ejs');
@@ -144,8 +150,8 @@ const profile = {
             year: '2023',
             link: 'https://github.com/NguyenAnhDucDev/BTL-LTNC',
             description: {
-                vi: 'Dự án môn học Lập trình nâng cao sử dụng C/C++ và thư viện SDL2.',
-                en: 'A project for my university courses using C/C++ and SDL2 library.'
+                vi: 'Game 2D hai người chơi bằng C++/SDL2: xử lý sự kiện, vẽ đồ họa, quản lý tài nguyên, hiệu ứng trạng thái. Rèn luyện OOP, phát triển game cơ bản.',
+                en: '2D two-player game using C++/SDL2: event handling, graphics rendering, resource management, status effects. Practiced OOP, basic game development.'
             }
         },
         {
@@ -153,11 +159,23 @@ const profile = {
                 vi: 'Todo List App - Fullstack DevOps Demo',
                 en: 'Todo List App - Fullstack DevOps Demo'
             },
-            year: '2024',
+            year: '2025',
             link: 'https://github.com/NguyenAnhDucDev/to_do_list_nodejs',
             description: {
                 vi: 'Dự án Todo List tích hợp Node.js, Express, MySQL, Docker, Prometheus, Grafana, Redis, Kafka, Socket.io, CI/CD, Cloud Deploy. Quản lý công việc, đăng nhập, realtime, monitoring, auto deploy. Xem chi tiết README để biết thêm tính năng và hướng dẫn.',
                 en: 'A Todo List project integrating Node.js, Express, MySQL, Docker, Prometheus, Grafana, Redis, Kafka, Socket.io, CI/CD, Cloud Deploy. Task management, login, realtime, monitoring, auto deploy. See README for full features and instructions.'
+            }
+        },
+        {
+            title: {
+                vi: 'School Exchange App',
+                en: 'School Exchange App'
+            },
+            year: '2025',
+            link: 'https://github.com/leo-090804/SystemDesignAndAnalysis',
+            description: {
+                vi: 'Dự án trao đổi sách cho học sinh. Vai trò BA: Phân tích nghiệp vụ, xây dựng kịch bản sử dụng thực tế, đề xuất và triển khai giải pháp kỹ thuật, phối hợp phát triển API backend (Python FastAPI/Flask, MongoDB), quản lý thành viên, sản phẩm, giao dịch. Hỗ trợ kiểm thử, sửa lỗi, tối ưu hệ thống.',
+                en: 'A book exchange project for students. BA role: Business analysis, building real-world use cases, proposing and implementing technical solutions, collaborating on backend API (Python FastAPI/Flask, MongoDB), managing members, products, transactions. Supporting testing, bug fixing, and system optimization.'
             }
         }
     ],
@@ -209,6 +227,32 @@ const profile = {
         }
     ]
 };
+
+// Configure multer for file upload
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname)
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  fileFilter: function (req, file, cb) {
+    const allowedTypes = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.png', '.jpg', '.jpeg'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (allowedTypes.includes(ext)) {
+      cb(null, true);
+    } else {
+      cb(new Error('File type not allowed'));
+    }
+  }
+});
 
 // Routes
 app.get('/', (req, res) => {
@@ -348,29 +392,38 @@ app.get('/download-cv', (req, res) => {
     doc.end();
 });
 
-// Contact form - send email
-app.post('/contact', async (req, res) => {
-    const { name, email, message } = req.body;
-    // Cấu hình transporter (Gmail, cần bật 2FA và tạo App Password)
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'your.email@gmail.com', // Thay bằng email của bạn
-            pass: 'your-app-password'     // Thay bằng App Password
-        }
-    });
-    const mailOptions = {
-        from: email,
-        to: 'your.email@gmail.com', // Thay bằng email nhận
-        subject: `Portfolio Contact: ${name}`,
-        text: `From: ${name} <${email}>\n\n${message}`
-    };
-    try {
-        await transporter.sendMail(mailOptions);
-        res.json({ success: true, message: 'Gửi email thành công! Tôi sẽ liên hệ lại sớm.' });
-    } catch (err) {
-        res.json({ success: false, message: 'Gửi email thất bại. Vui lòng thử lại sau.' });
+// Route liên hệ nhận thông tin từ HR và gửi email qua SendGrid
+app.post('/api/contact', upload.single('jdFile'), async (req, res) => {
+  try {
+    const { name, email, message, phone } = req.body;
+    const to = '22024536@vnu.edu.vn'; // Địa chỉ nhận
+
+    let attachments = [];
+    if (req.file) {
+      const fileContent = fs.readFileSync(req.file.path).toString('base64');
+      attachments.push({
+        content: fileContent,
+        filename: req.file.originalname,
+        type: req.file.mimetype,
+        disposition: 'attachment',
+      });
     }
+
+    await sendEmail({
+      to,
+      subject: `Liên hệ mới từ ${name}`,
+      text: `${message}\nSố điện thoại: ${phone}`,
+      html: `<p><b>Tên:</b> ${name}</p><p><b>Email:</b> ${email}</p><p><b>Số điện thoại:</b> ${phone}</p><p><b>Nội dung:</b> ${message}</p>`,
+      attachments,
+    });
+
+    if (req.file) fs.unlinkSync(req.file.path);
+
+    res.json({ success: true, message: 'Gửi email thành công!' });
+  } catch (error) {
+    console.error('SendGrid error:', error, error?.response?.body);
+    res.status(500).json({ success: false, message: 'Gửi email thất bại!', error: error.message });
+  }
 });
 
 app.listen(port, () => {
